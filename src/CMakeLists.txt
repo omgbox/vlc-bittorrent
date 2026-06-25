@@ -15,14 +15,14 @@ if(WIN32)
         access_bittorrent_plugin
         PRIVATE
         "${LIBTORRENT_INCLUDE_DIR}"
-        "C:/msys64/mingw64/include"
+        "${VLC_INCLUDE_DIR}"
     )
 
     target_link_directories(
         access_bittorrent_plugin
         PRIVATE
         "${LIBTORRENT_LIB_DIR}"
-        "C:/msys64/mingw64/lib"
+        "${VLC_LIB_DIR}"
     )
 
     target_link_libraries(
@@ -31,11 +31,11 @@ if(WIN32)
         "-lvlc"
         "-lvlccore"
         "-Wl,--whole-archive"
-        "C:/Users/vooo/vlc-bittorrent-win/wp-static/libwinpthreads_static.a"
+        "${CMAKE_SOURCE_DIR}/wp-static/libwinpthreads_static.a"
         "-Wl,--no-whole-archive"
-        "C:/msys64/mingw64/lib/libtorrent-rasterbar.a"
-        "C:/msys64/mingw64/lib/libssl.a"
-        "C:/msys64/mingw64/lib/libcrypto.a"
+        "${LIBTORRENT_LIB_DIR}/libtorrent-rasterbar.a"
+        "${LIBTORRENT_LIB_DIR}/libssl.a"
+        "${LIBTORRENT_LIB_DIR}/libcrypto.a"
         "-lws2_32"
         "-liphlpapi"
         "-lcrypt32"

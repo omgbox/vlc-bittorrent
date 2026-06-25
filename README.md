@@ -26,7 +26,7 @@ Download `libaccess_bittorrent_plugin.dll` from the [Releases](https://github.co
 
 ### Magnet Links
 1. Open VLC
-2. Go to **Media > Open Network Stream** (or press `Ctrl+N`)
+2. Go to **Media > Open Location from Clipboard** (or press `Ctrl+N`)
 3. Paste a magnet link (e.g. `magnet:?xt=urn:btih:...`)
 4. Click **Play**
 

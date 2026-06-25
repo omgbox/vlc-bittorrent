@@ -26,9 +26,11 @@ Download `libaccess_bittorrent_plugin.dll` from the [Releases](https://github.co
 
 ### Magnet Links
 1. Open VLC
-2. Go to **Media > Open Location from Clipboard** 
-3. Paste a magnet link (e.g. `magnet:?xt=urn:btih:...`)
-4. Click **Play**
+2. Copy a magnet link to your clipboard
+3. Go to **Media > Open Location from Clipboard** (or press `Ctrl+V` in the main window)
+4. The magnet link will load automatically
+
+Alternatively, you can use **Media > Open Network Stream** (or press `Ctrl+N`), paste the magnet link, and click **Play**.
 
 ### Torrent Files
 1. Open VLC
@@ -44,19 +46,34 @@ vlc "C:\path\to\file.torrent"
 
 ## Building from Source
 
-### Requirements
-- [MSYS2](https://www.msys2.org/) with MinGW 64-bit toolchain
-- VLC 3.0.x development headers and libraries (via MSYS2: `pacman -S mingw-w64-x86_64-vlc`)
-- libtorrent-rasterbar (via MSYS2: `pacman -S mingw-w64-x86_64-libtorrent-rasterbar`)
-- OpenSSL (via MSYS2: `pacman -S mingw-w64-x86_64-openssl`)
-- Ninja (`pacman -S mingw-w64-x86_64-ninja`)
+### Build Environment
+[MSYS2](https://www.msys2.org/) with MinGW-w64 64-bit toolchain. Open **MSYS2 MinGW 64-bit** terminal to build.
+
+### Requirements (MSYS2 packages)
+
+| Package | Version | Purpose | Linkage |
+|---|---|---|---|
+| `mingw-w64-x86_64-gcc` | ≥ 16.1.0 | C/C++ compiler | — |
+| `mingw-w64-x86_64-cmake` | ≥ 4.3 | Build system (≥ 3.14) | — |
+| `mingw-w64-x86_64-ninja` | ≥ 1.13 | Build runner | — |
+| `mingw-w64-x86_64-vlc` | 3.0.x | VLC plugin API (`libvlc.dll.a`, `libvlccore.dll.a`) | dynamic (loaded by VLC) |
+| `mingw-w64-x86_64-libtorrent-rasterbar` | ≥ 2.0 | P2P protocol engine | static |
+| `mingw-w64-x86_64-openssl` | ≥ 3.0 | Encryption (libtorrent dependency) | static |
+| `mingw-w64-x86_64-winpthreads` | ≥ 14.0 | pthreads (built from source → fully static `.a`) | static |
+
+**Transitive dependencies** (auto-pulled by the above): `mingw-w64-x86_64-boost` (libtorrent dep), `mingw-w64-x86_64-gcc-libs`.
+
+### Install Prerequisites
+
+```bash
+pacman -S mingw-w64-x86_64-gcc mingw-w64-x86_64-cmake mingw-w64-x86_64-ninja
+pacman -S mingw-w64-x86_64-vlc mingw-w64-x86_64-libtorrent-rasterbar mingw-w64-x86_64-openssl mingw-w64-x86_64-winpthreads
+```
 
 ### Build Steps
 
-Open **MSYS2 MinGW 64-bit** terminal:
-
 ```bash
-# Clone the repository
+# Clone
 git clone https://github.com/omgbox/vlc-bittorrent.git
 cd vlc-bittorrent
 
@@ -67,6 +84,10 @@ ninja
 ```
 
 The output DLL will be at `build/src/libaccess_bittorrent_plugin.dll`.
+
+### Static libwinpthreads (required for Windows VLC)
+
+VLC 3.0 calls `SetDefaultDllDirectories(LOAD_LIBRARY_SEARCH_SYSTEM32)`, which blocks plugins from loading `libwinpthread-1.dll` from MSYS2. The supplied `wp-static/libwinpthreads_static.a` is built from mingw-w64 source with `-DWINPTHREAD_STATIC` to eliminate this dependency. See `wp-static/README.md` for rebuild instructions.
 
 ### Deploy to MSYS2 VLC (for testing)
 ```bash

@@ -56,7 +56,7 @@ vlc_module_begin()
 
     add_submodule()
         set_description("Bittorrent magnet metadata access")
-        set_capability("access", 60)
+        set_capability("access", 200)
         add_shortcut("file", "magnet")
         set_callbacks(MagnetMetadataOpen, MagnetMetadataClose)
 vlc_module_end()
